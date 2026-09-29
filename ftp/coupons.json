@@ -1,0 +1,9 @@
+{
+  "note": "Internal coupon export. Should not be publicly downloadable.",
+  "coupons": [
+    { "code": "WELCOME10", "formula": "total * 0.10" },
+    { "code": "FIVER", "formula": "5" },
+    { "code": "BLACKFRIDAY", "formula": "total * 0.30" },
+    { "code": "STAFF", "formula": "total", "note": "unlisted 100% staff discount" }
+  ]
+}

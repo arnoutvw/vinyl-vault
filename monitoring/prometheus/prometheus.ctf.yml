@@ -1,0 +1,27 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+# GENERATED FILE — regenerate with: node scripts/gen-ctf.js
+# One scrape job per team instance. Each app labels its own metrics with
+# team="..." (via VV_DEFAULT_TEAM); the CTF Scoreboard dashboard aggregates
+# with `sum by (team) (...)`.
+scrape_configs:
+  - job_name: "vinyl-vault-team-red"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["vv-team-red:3000"]
+
+  - job_name: "vinyl-vault-team-blue"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["vv-team-blue:3000"]
+
+  - job_name: "vinyl-vault-team-green"
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["vv-team-green:3000"]
+
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]

@@ -1,0 +1,128 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "tags": ["vinyl-vault", "security", "training"],
+  "templating": { "list": [] },
+  "time": { "from": "now-30m", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Vinyl Vault — Shop & Security Overview",
+  "uid": "vinyl-vault-overview",
+  "version": 1,
+  "weekStart": "",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Registered users",
+      "datasource": { "type": "prometheus", "uid": "vv-prometheus" },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "blue", "value": null }] } }, "overrides": [] },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "graphMode": "area", "textMode": "auto" },
+      "targets": [ { "refId": "A", "datasource": { "type": "prometheus", "uid": "vv-prometheus" }, "expr": "vv_users_registered" } ]
+    },
+    {
+      "type": "stat",
+      "title": "Orders placed",
+      "datasource": { "type": "prometheus", "uid": "vv-prometheus" },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }] } }, "overrides": [] },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "graphMode": "area", "textMode": "auto" },
+      "targets": [ { "refId": "A", "datasource": { "type": "prometheus", "uid": "vv-prometheus" }, "expr": "vv_orders_created_total" } ]
+    },
+    {
+      "type": "stat",
+      "title": "Reviews posted",
+      "datasource": { "type": "prometheus", "uid": "vv-prometheus" },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "purple", "value": null }] } }, "overrides": [] },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "graphMode": "area", "textMode": "auto" },
+      "targets": [ { "refId": "A", "datasource": { "type": "prometheus", "uid": "vv-prometheus" }, "expr": "vv_reviews_posted_total" } ]
+    },
+    {
+      "type": "stat",
+      "title": "Challenges solved (total)",
+      "datasource": { "type": "prometheus", "uid": "vv-prometheus" },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "red", "value": null }, { "color": "orange", "value": 1 }, { "color": "green", "value": 5 }] } }, "overrides": [] },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none", "textMode": "auto" },
+      "targets": [ { "refId": "A", "datasource": { "type": "prometheus", "uid": "vv-prometheus" }, "expr": "sum(vv_challenges_solved_total)" } ]
+    },
+    {
+      "type": "timeseries",
+      "title": "HTTP request rate by route",
+      "datasource": { "type": "prometheus", "uid": "vv-prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 10, "showPoints": "never" }, "unit": "reqps" }, "overrides": [] },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["mean", "max"] }, "tooltip": { "mode": "multi" } },
+      "targets": [ { "refId": "A", "datasource": { "type": "prometheus", "uid": "vv-prometheus" }, "expr": "sum by (route) (rate(vv_http_requests_total[1m]))", "legendFormat": "{{route}}" } ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Login attempts (success vs failure)",
+      "description": "A spike in failures with a flat success line is a brute-force signature.",
+      "datasource": { "type": "prometheus", "uid": "vv-prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "bars", "fillOpacity": 60, "stacking": { "mode": "normal" } }, "unit": "short" }, "overrides": [ { "matcher": { "id": "byName", "options": "failure" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } } ] }, { "matcher": { "id": "byName", "options": "success" }, "properties": [ { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } } ] } ] },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "targets": [ { "refId": "A", "datasource": { "type": "prometheus", "uid": "vv-prometheus" }, "expr": "sum by (result) (rate(vv_login_attempts_total[1m]))", "legendFormat": "{{result}}" } ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Request latency (p95) by route",
+      "datasource": { "type": "prometheus", "uid": "vv-prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 5, "showPoints": "never" }, "unit": "s" }, "overrides": [] },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom", "calcs": ["max"] }, "tooltip": { "mode": "multi" } },
+      "targets": [ { "refId": "A", "datasource": { "type": "prometheus", "uid": "vv-prometheus" }, "expr": "histogram_quantile(0.95, sum by (le, route) (rate(vv_http_request_duration_seconds_bucket[5m])))", "legendFormat": "{{route}}" } ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Responses by status code",
+      "datasource": { "type": "prometheus", "uid": "vv-prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 20, "stacking": { "mode": "normal" }, "showPoints": "never" }, "unit": "reqps" }, "overrides": [] },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "targets": [ { "refId": "A", "datasource": { "type": "prometheus", "uid": "vv-prometheus" }, "expr": "sum by (status) (rate(vv_http_requests_total[1m]))", "legendFormat": "{{status}}" } ]
+    },
+    {
+      "type": "barchart",
+      "title": "Challenges solved by type",
+      "datasource": { "type": "prometheus", "uid": "vv-prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+      "fieldConfig": { "defaults": { "custom": { "lineWidth": 1, "fillOpacity": 80 }, "color": { "mode": "palette-classic" }, "unit": "short" }, "overrides": [] },
+      "options": { "orientation": "horizontal", "xTickLabelRotation": 0, "showValue": "auto", "legend": { "showLegend": false } },
+      "targets": [ { "refId": "A", "datasource": { "type": "prometheus", "uid": "vv-prometheus" }, "expr": "sum by (challenge) (vv_challenges_solved_total)", "legendFormat": "{{challenge}}", "format": "table", "instant": true } ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Order value (p50 / p95, EUR)",
+      "datasource": { "type": "prometheus", "uid": "vv-prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "fieldConfig": { "defaults": { "custom": { "drawStyle": "line", "fillOpacity": 5, "showPoints": "auto" }, "unit": "currencyEUR" }, "overrides": [] },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
+      "targets": [
+        { "refId": "A", "datasource": { "type": "prometheus", "uid": "vv-prometheus" }, "expr": "histogram_quantile(0.50, sum by (le) (rate(vv_order_value_eur_bucket[10m])))", "legendFormat": "p50" },
+        { "refId": "B", "datasource": { "type": "prometheus", "uid": "vv-prometheus" }, "expr": "histogram_quantile(0.95, sum by (le) (rate(vv_order_value_eur_bucket[10m])))", "legendFormat": "p95" }
+      ]
+    }
+  ]
+}

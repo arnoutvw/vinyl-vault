@@ -1,0 +1,427 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": true,
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "tags": [
+    "vinyl-vault",
+    "ctf",
+    "scoreboard"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Vinyl Vault \u2014 CTF Scoreboard",
+  "uid": "vinyl-vault-ctf",
+  "version": 1,
+  "weekStart": "",
+  "panels": [
+    {
+      "type": "bargauge",
+      "title": "Current score per team",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vv-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "unit": "short",
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "showUnfilled": true,
+        "valueMode": "color",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vv-prometheus"
+          },
+          "expr": "sum by (team) (vv_team_score)",
+          "legendFormat": "{{team}}",
+          "instant": true
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Standings",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vv-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "Score",
+            "desc": true
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "app": true,
+              "instance": true,
+              "job": true
+            },
+            "renameByName": {
+              "team": "Team",
+              "Value #A": "Score",
+              "Value #B": "Challenges solved"
+            }
+          }
+        }
+      ],
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vv-prometheus"
+          },
+          "expr": "sum by (team) (vv_team_score)",
+          "format": "table",
+          "instant": true
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vv-prometheus"
+          },
+          "expr": "sum by (team) (vv_team_challenge_solved)",
+          "format": "table",
+          "instant": true
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Score over time",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vv-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "stepAfter",
+            "fillOpacity": 10,
+            "showPoints": "never"
+          },
+          "unit": "short",
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vv-prometheus"
+          },
+          "expr": "sum by (team) (vv_team_score)",
+          "legendFormat": "{{team}}"
+        }
+      ]
+    },
+    {
+      "type": "barchart",
+      "title": "Challenges solved per team",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vv-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "lineWidth": 1,
+            "fillOpacity": 80
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "unit": "short",
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "showValue": "always",
+        "legend": {
+          "showLegend": false
+        },
+        "xTickLabelRotation": 0
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vv-prometheus"
+          },
+          "expr": "sum by (team) (vv_team_challenge_solved)",
+          "legendFormat": "{{team}}",
+          "format": "table",
+          "instant": true
+        }
+      ]
+    },
+    {
+      "type": "state-timeline",
+      "title": "Per-challenge solve state (per team)",
+      "description": "1 = the team has solved that challenge. Rolls up across per-team deployments.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vv-prometheus"
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "fillOpacity": 90,
+            "lineWidth": 0
+          },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "1": {
+                  "text": "solved",
+                  "color": "green"
+                }
+              }
+            }
+          ],
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "steps": [
+              {
+                "color": "transparent",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "mergeValues": true,
+        "showValue": "never",
+        "alignValue": "left",
+        "rowHeight": 0.9,
+        "legend": {
+          "showLegend": false
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vv-prometheus"
+          },
+          "expr": "vv_team_challenge_solved",
+          "legendFormat": "{{team}} \u00b7 {{challenge}}"
+        }
+      ]
+    },
+    {
+      "type": "bargauge",
+      "title": "Points spent on hints per team",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vv-prometheus"
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 35
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-YlOrRd"
+          },
+          "unit": "short",
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "basic",
+        "showUnfilled": true,
+        "valueMode": "color",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vv-prometheus"
+          },
+          "expr": "sum by (team) (vv_team_hint_points_spent)",
+          "legendFormat": "{{team}}",
+          "instant": true
+        }
+      ]
+    },
+    {
+      "type": "barchart",
+      "title": "Solves by difficulty (per team)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "vv-prometheus"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "stacking": "normal",
+        "xTickLabelRotation": 0,
+        "legend": {
+          "showLegend": true,
+          "placement": "right"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "vv-prometheus"
+          },
+          "expr": "sum by (team, difficulty) (vv_team_challenge_solved)",
+          "legendFormat": "{{team}} \u2014 {{difficulty}}",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}

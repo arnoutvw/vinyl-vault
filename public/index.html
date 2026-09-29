@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vinyl Vault — Rare Records &amp; Test Pressings</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand" onclick="Shop.go('home')">
+      <span class="disc">◉</span> VINYL&nbsp;VAULT
+    </div>
+    <div class="searchwrap" id="searchwrap">
+      <input id="search" type="text" placeholder="Search records, artists…"
+             onkeydown="if(event.key==='Enter') Shop.search()" />
+      <button onclick="Shop.search()">Search</button>
+    </div>
+    <nav class="nav" id="mainnav">
+      <button onclick="Shop.go('home')">Shop</button>
+      <button onclick="Shop.go('challenges')">🎯 Challenges</button>
+      <button onclick="Shop.go('scoreboard')">🏆 Scoreboard</button>
+      <button onclick="Shop.go('httplab')">🧪 HTTP Lab</button>
+      <button onclick="Shop.go('tools')">🛠 Tools</button>
+      <button onclick="Shop.go('cart')">Cart (<span id="cart-count">0</span>)</button>
+      <button id="account-btn" onclick="Shop.go('account')">Account</button>
+    </nav>
+    <div class="team-status" id="team-status"></div>
+    <div class="game-clock" id="game-clock"></div>
+  </header>
+
+  <main id="view" class="view"></main>
+
+  <footer class="footer">
+    <span>Vinyl Vault · a security-training target · intentionally vulnerable</span>
+    <a href="/api/download?file=legal.md" target="_blank">Legal &amp; returns</a>
+    <a href="/metrics" target="_blank">Metrics</a>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
